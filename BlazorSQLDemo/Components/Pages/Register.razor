@@ -41,8 +41,44 @@
             <button class="btn btn-primary px-4" @onclick="RegisterEmployee">Submit</button>
         </div>
 
-        <div class="text-center mt-3">
-            <p class="text-success">@successMessage</p>
+        @if(!string.IsNullOrEmpty(successMessage)){
+            <div class="text-center mt-3">
+                <p class="text-success">@successMessage</p>
+            </div>
+        }
+    </div>
+
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped shadow">
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(Employees is not null && Employees.Any()){
+                        @foreach (var employee in Employees){
+                            <tr>
+                                <td>@employee.Id</td>
+                                <td>@employee.FirstName</td>
+                                <td>@employee.LastName</td>
+                                <td>@employee.Email</td>
+                                <td>@employee.Position</td>
+                            </tr>
+                        }
+                    }
+                    else{
+                        <tr>
+                            <td colspan="5"class="text-center">No employees found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -52,6 +88,8 @@
 @code {
     Employee employee = new Employee();
     private string successMessage = string.Empty;
+
+    private List<Employee> Employees = new();
 
     private async Task RegisterEmployee(){
 
@@ -67,4 +105,10 @@
         StateHasChanged();
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        Employees = await EmployeeService.GetEmployees();
+    }
+
+    
 }
