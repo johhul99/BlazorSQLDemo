@@ -1,0 +1,70 @@
+﻿@page "/register"
+@using BlazorSQLDemo.Models
+@using BlazorSQLDemo.Data
+@rendermode InteractiveServer
+@inject EmployeeService EmployeeService
+
+
+<h1>Register</h1>
+
+<div class="container">
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">First Name</label>
+        <div class="col-sm-10">
+            <InputText class="form-control" @bind-Value="employee.FirstName" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Last Name</label>
+        <div class="col-sm-10">
+            <InputText class="form-control" @bind-Value="employee.LastName" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+            <InputText class="form-control" @bind-Value="employee.Email" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Position</label>
+        <div class="col-sm-10">
+            <InputText class="form-control" @bind-Value="employee.Position" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary px-4" @onclick="RegisterEmployee">Submit</button>
+        </div>
+
+        <div class="text-center mt-3">
+            <p class="text-success">@successMessage</p>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    Employee employee = new Employee();
+    private string successMessage = string.Empty;
+
+    private async Task RegisterEmployee(){
+
+        await EmployeeService.AddEmployee(employee);
+
+        employee = new Employee();
+
+        successMessage = "Employee registered successfully!";
+        StateHasChanged();
+
+        await Task.Delay(3000);
+        successMessage = string.Empty;
+        StateHasChanged();
+    }
+
+}
